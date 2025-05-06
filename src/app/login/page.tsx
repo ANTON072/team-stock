@@ -1,9 +1,12 @@
 'use client';
 
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Package } from 'lucide-react';
-import GoogleButton from './components/google-button';
 import { useState } from 'react';
+
+import { Package } from 'lucide-react';
+
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+
+import GoogleButton from './components/google-button';
 
 export default function LoginPage() {
   const [isLoading, setIsLoading] = useState(false);

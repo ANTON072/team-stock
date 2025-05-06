@@ -1,6 +1,7 @@
-import { dirname } from "path";
-import { fileURLToPath } from "url";
-import { FlatCompat } from "@eslint/eslintrc";
+import { FlatCompat } from '@eslint/eslintrc';
+import simpleImportSort from 'eslint-plugin-simple-import-sort';
+import { dirname } from 'path';
+import { fileURLToPath } from 'url';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -10,7 +11,36 @@ const compat = new FlatCompat({
 });
 
 const eslintConfig = [
-  ...compat.extends("next/core-web-vitals", "next/typescript"),
+  ...compat.extends('next/core-web-vitals', 'next/typescript', 'prettier'),
+  {
+    plugins: {
+      'simple-import-sort': simpleImportSort,
+    },
+    rules: {
+      'simple-import-sort/imports': [
+        'error',
+        {
+          groups: [
+            // Reactとnextを最初に配置
+            ['^react', '^next'],
+            // 外部パッケージ
+            ['^@?\\w'],
+            // 内部モジュール（@/で始まるエイリアスパス）
+            ['^(@|components|pages|app|features|hooks|utils|types|styles)(/.*|$)'],
+            // サイドエフェクトのあるインポート
+            ['^\\u0000'],
+            // 親ディレクトリからのインポート
+            ['^\\.\\.(?!/?$)', '^\\.\\./?$'],
+            // 同じディレクトリからのインポート
+            ['^\\./(?=.*/)(?!/?$)', '^\\.(?!/?$)', '^\\./?$'],
+            // スタイルインポート
+            ['^.+\\.?(css|scss|sass)$'],
+          ],
+        },
+      ],
+      'simple-import-sort/exports': 'error',
+    },
+  },
 ];
 
 export default eslintConfig;
